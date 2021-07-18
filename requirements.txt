@@ -1,0 +1,10 @@
+Flask
+gunicorn
+Tensorflow-cpu
+flask-restful
+click
+itsdangerous
+Jinja2
+MarkupSafe
+Werkzeug
+pillow
