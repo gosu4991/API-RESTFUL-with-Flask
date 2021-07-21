@@ -60,8 +60,7 @@ def get_output():
         img = request.files['my_image']
         img_path = "static/" + img.filename
         files = {'file': img.read()}
-        prediction = requests.post(url,files=files)
-        img.save(img_path) 
+        prediction = requests.post(url,files=files) 
         data = prediction.content
         json_data = json.loads(data)
 
