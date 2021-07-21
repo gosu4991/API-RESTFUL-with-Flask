@@ -1,13 +1,19 @@
-from flask import Flask
+from flask import Flask, render_template, request, jsonify
 from flask_restful import Resource, Api, reqparse
 from werkzeug.datastructures import FileStorage
 from predict_resnet50 import predict
 import tempfile
 import json
 import pprint
+import requests
+import json
+import time
+
 
 app = Flask(__name__)
 app.logger.setLevel('INFO')
+url='http://class-catdog.herokuapp.com/image'
+timestr = time.strftime("%Y%m%d")
 
 api = Api(app)
 
@@ -31,16 +37,39 @@ class Image(Resource):
     def post(self):
         args = parser.parse_args()
         the_file = args['file']
+        # save a temporary copy of the file
         ofile, ofname = tempfile.mkstemp()
         the_file.save(ofname)
+        # predict
         results = predict(ofname)[0]
-        output = {'categories':[]}
+        # formatting the results as a JSON-serializable structure:
+        output = {'top_categories': []}
+        out = {'categories': []}
         for _, categ, score in results:
-            output['categories'].append(("Categories: "+categ))
-            output['categories'].append(("Accuracy: "+str(float(score))))
-        
-        return output
+            out['categories'] += (([categ+str(': ')+str(float(score))]))
 
+        return [out]
+
+
+
+# routes
+@app.route("/index.html", methods=['GET', 'POST'])
+def main():
+    return render_template("index.html")
+
+@app.route("/submit", methods = ['POST'])
+def get_output():
+    if request.method == 'POST':
+        img = request.files['my_image']
+        img_path = "static/" + img.filename
+        files = {'file': img.read()}
+        prediction = requests.post(url,files=files)
+        img.save(img_path) 
+        data = prediction.content
+        json_data = json.loads(data)
+
+
+    return render_template("index.html",data=json_data, img_path = img_path)
 
 api.add_resource(Hello, '/hello')
 api.add_resource(Image, '/image')

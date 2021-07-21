@@ -2,8 +2,6 @@
 import tensorflow.keras.applications.resnet50 as resnet50
 from tensorflow.keras.preprocessing import image
 import pprint
-import os
-os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'  # so that it runs on a mac
 
 
 # load and resize image
@@ -32,10 +30,5 @@ def predict(fname):
 
 
 if __name__ == '__main__':
-
     import pprint
     import sys
-
-    file_name = sys.argv[1]
-    results = predict(file_name)
-    pprint.pprint(results)
