@@ -58,7 +58,7 @@ def main():
 def get_output():
     if request.method == 'POST':
         img = request.files['my_image']
-        img_path = "static/" + img.filename
+        img_path = img.filename
         files = {'file': img.read()}
         prediction = requests.post(url,files=files) 
         data = prediction.content
