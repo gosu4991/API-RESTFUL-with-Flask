@@ -7,13 +7,10 @@ import json
 import pprint
 import requests
 import json
-import time
-
 
 app = Flask(__name__)
 app.logger.setLevel('INFO')
 url='http://class-catdog.herokuapp.com/image'
-timestr = time.strftime("%Y%m%d")
 
 api = Api(app)
 
