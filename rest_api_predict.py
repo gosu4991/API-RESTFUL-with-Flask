@@ -11,7 +11,6 @@ import json
 app = Flask(__name__)
 app.logger.setLevel('INFO')
 url='http://class-catdog.herokuapp.com/image'
-
 api = Api(app)
 
 parser = reqparse.RequestParser()
@@ -58,8 +57,9 @@ def main():
 def get_output():
     if request.method == 'POST':
         img = request.files['my_image']
-        img_path = img.filename
+        img_path = 'static/' + img.filename       
         files = {'file': img.read()}
+        img.save(img_path)
         prediction = requests.post(url,files=files) 
         data = prediction.content
         json_data = json.loads(data)
